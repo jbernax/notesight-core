@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  # The FastAPI Backend API Server
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg://omr_user:omr_password@db:5432/omr_db
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - UPLOAD_DIR=/app/data/uploads
+      - RESULTS_DIR=/app/data/results
+    volumes:
+      - omr_data:/app/data
+    depends_on:
+      - db
+      - redis
+    restart: always
+
+  # The Vue 3 / Vite Frontend (Nginx)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: always
+
+  # Redis for task queuing (bound to loopback to prevent external interface exposure)
+  redis:
+    image: redis:alpine
+    ports:
+      - "127.0.0.1:6379:6379"
+    restart: always
+
+  # PostgreSQL for tracking jobs and accounts (bound to loopback for security isolation)
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: omr_user
+      POSTGRES_PASSWORD: omr_password
+      POSTGRES_DB: omr_db
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
+  # Dedicated Celery Worker for neural OMR inference (concurrency capped at 1 to prevent VPS OOM)
+  worker-omr:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: ["celery", "-A", "app.celery_app.celery_app", "worker", "-Q", "omr_compute", "-c", "1", "--loglevel=info"]
+    environment:
+      - DATABASE_URL=postgresql+psycopg://omr_user:omr_password@db:5432/omr_db
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - UPLOAD_DIR=/app/data/uploads
+      - RESULTS_DIR=/app/data/results
+    volumes:
+      - omr_data:/app/data
+    depends_on:
+      - db
+      - redis
+    restart: always
+
+  # Lightweight Celery Worker for I/O tasks, storage pruning, and Celery beat schedule
+  worker-io:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: ["celery", "-A", "app.celery_app.celery_app", "worker", "-B", "-Q", "io_tasks,celery", "-c", "4", "--loglevel=info"]
+    environment:
+      - DATABASE_URL=postgresql+psycopg://omr_user:omr_password@db:5432/omr_db
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - UPLOAD_DIR=/app/data/uploads
+      - RESULTS_DIR=/app/data/results
+    volumes:
+      - omr_data:/app/data
+    depends_on:
+      - db
+      - redis
+    restart: always
+
+volumes:
+  postgres_data:
+  omr_data:

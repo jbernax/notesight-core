@@ -1,0 +1,53 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "1.0.1",
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview",
+    "test:qa": "tsx qa-agent/runner.ts",
+    "test:midi": "tsx qa-agent/test_midi_service.ts",
+    "test:mobile": "tsx qa-agent/test_mobile_app_journey.ts",
+    "test:android": "tsx qa-agent/test_android_emulator_e2e.ts",
+    "test:p18": "tsx qa-agent/test_roadmap_p18.ts",
+    "test:lyrics": "tsx qa-agent/test_lyrics_anti_collision.ts",
+    "test:settings": "tsx qa-agent/test_settings_responsive.ts",
+    "test:voices": "tsx qa-agent/test_mobile_voices_and_settings.ts",
+    "test:avatar-toggles": "tsx qa-agent/test_mobile_avatar_and_toggles.ts"
+  },
+  "dependencies": {
+    "@breezystack/lamejs": "^1.2.7",
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/browser": "^8.0.5",
+    "@capacitor/camera": "^8.2.5",
+    "@capacitor/core": "^8.5.3",
+    "@capacitor/filesystem": "^8.1.4",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/preferences": "^8.0.1",
+    "@capacitor/share": "^8.0.3",
+    "@capacitor/status-bar": "^8.0.4",
+    "jszip": "^3.10.1",
+    "opensheetmusicdisplay": "^2.2.1",
+    "vue": "^3.5.44",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
+    "@types/node": "^24.19.2",
+    "@vitejs/plugin-vue": "^6.0.10",
+    "@vue/tsconfig": "^0.9.1",
+    "lucide-vue-next": "^1.0.0",
+    "playwright": "^1.64.0",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.4",
+    "vue-tsc": "^3.3.13"
+  }
+}

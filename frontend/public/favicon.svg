@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" fill="none">
+  <defs>
+    <linearGradient id="nsBeam" x1="12" y1="6" x2="32" y2="12" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366F1"/>
+      <stop offset="100%" stop-color="#22D3EE"/>
+    </linearGradient>
+  </defs>
+  <!-- Background rounded squircle -->
+  <rect width="40" height="40" rx="10" fill="#0F172A" />
+  
+  <!-- Subtle stave lines -->
+  <line x1="6" y1="13" x2="34" y2="13" stroke="#1E293B" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="6" y1="17" x2="34" y2="17" stroke="#334155" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="6" y1="21" x2="34" y2="21" stroke="#334155" stroke-width="1.2" stroke-linecap="round"/>
+  <line x1="6" y1="25" x2="34" y2="25" stroke="#1E293B" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- Musical Note Stems and Beam -->
+  <polygon points="13,8 29,12 29,15.5 13,11.5" fill="url(#nsBeam)"/>
+  <rect x="13" y="10" width="2.5" height="15" fill="#6366F1" rx="1"/>
+  <rect x="27.5" y="14" width="2.5" height="11" fill="#22D3EE" rx="1"/>
+
+  <!-- Right notehead -->
+  <ellipse cx="25.5" cy="25" rx="4.5" ry="3.2" transform="rotate(-20 25.5 25)" fill="#22D3EE"/>
+
+  <!-- Left notehead: The Sight Lens -->
+  <ellipse cx="11.5" cy="25" rx="5" ry="3.8" transform="rotate(-20 11.5 25)" fill="#4F46E5"/>
+  <ellipse cx="11.5" cy="25" rx="2.5" ry="1.9" transform="rotate(-20 11.5 25)" fill="#FAF8F5"/>
+  <circle cx="11.5" cy="25" r="1.2" fill="#06B6D4"/>
+</svg>
